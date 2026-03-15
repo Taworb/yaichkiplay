@@ -195,9 +195,9 @@
 <body>
 
   <header>
-    <div class="logo">// скачивание</div>
+    <div class="logo">// моды</div>
     <h1>Yaichki <span>Play</span></h1>
-    <div class="subtitle">моды · taworb</div>
+    <div class="subtitle">q1yuqva · NaoMio404 · Taworb</div>
   </header>
 
   <div class="file-list" id="list">
@@ -307,6 +307,7 @@
           <div class="empty-icon">⚠️</div>
           не удалось загрузить файлы<br>
           <span style="font-size:11px;margin-top:8px;display:block">${err.message}</span>
+          ${err.message.includes('403') ? '<span style="font-size:11px;margin-top:6px;display:block;color:#aaa;">попробуйте выключить VPN, если он включен</span>' : ''}
         `;
       }
     }
