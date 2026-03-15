@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yaichki Play</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -238,10 +239,20 @@
       const list   = document.getElementById('list');
       const status = document.getElementById('status');
 
+      const IGNORE = ['index.html', 'README.md', 'readme.md', 'favicon.png', '.gitkeep', '.gitignore'];
+
       try {
-        const res = await fetch('files.json');
-        if (!res.ok) throw new Error('files.json не найден');
-        const files = await res.json();
+        const res = await fetch(
+          `https://api.github.com/repos/${OWNER}/${REPO}/git/trees/${BRANCH}?recursive=1`
+        );
+        if (!res.ok) throw new Error('API error ' + res.status);
+
+        const data  = await res.json();
+        const files = (data.tree || []).filter(item =>
+          item.type === 'blob' &&
+          !IGNORE.includes(item.path.split('/').pop()) &&
+          !item.path.startsWith('.')
+        );
 
         status.remove();
 
@@ -254,11 +265,12 @@
           return;
         }
 
-        files.forEach((name, i) => {
+        files.forEach((file, i) => {
+          const name     = file.path.split('/').pop();
           const ext      = getExt(name);
           const baseName = stripExt(name);
           const loader   = getLoader(name);
-          const url      = `https://github.com/${OWNER}/${REPO}/raw/${BRANCH}/${name}`;
+          const url      = `https://github.com/${OWNER}/${REPO}/raw/${BRANCH}/${file.path}`;
 
           const card = document.createElement('a');
           card.className = 'file-card';
@@ -293,7 +305,7 @@
       } catch (err) {
         status.innerHTML = `
           <div class="empty-icon">⚠️</div>
-          не удалось загрузить список файлов<br>
+          не удалось загрузить файлы<br>
           <span style="font-size:11px;margin-top:8px;display:block">${err.message}</span>
         `;
       }
