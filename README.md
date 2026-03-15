@@ -1,1 +1,1 @@
-По вопросам → [Issues](https://github.com/Taworb/Voice/issues)
+По вопросам → [Taworb](https://github.com/Taworb/Voice/issues)
