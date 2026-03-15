@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yaichki Play</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111111; --border: #222222;
+      --accent: #ff3232; --text: #f0f0f0; --muted: #555; --hover-bg: #181818;
+    }
+    body {
+      background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; padding: 60px 24px 80px;
+    }
+    header { width: 100%; max-width: 680px; margin-bottom: 64px; animation: fadeUp 0.6s ease both; }
+    .logo { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+    h1 span { color: var(--accent); }
+    .subtitle { margin-top: 12px; font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .grid { width: 100%; max-width: 680px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 32px 28px; text-decoration: none; color: var(--text);
+      display: flex; flex-direction: column; gap: 10px;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      animation: fadeUp 0.5s ease both; cursor: pointer; position: relative;
+    }
+    .panel:hover { background: var(--hover-bg); border-color: var(--accent); transform: translateY(-2px); }
+    .panel:hover .panel-arrow { color: var(--accent); transform: translate(2px, -2px); }
+    .panel-icon { font-size: 28px; margin-bottom: 4px; }
+    .panel-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+    .panel-desc { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; line-height: 1.5; }
+    .panel-arrow { position: absolute; top: 20px; right: 20px; color: var(--border); font-size: 18px; transition: color 0.15s, transform 0.15s; }
+    .panel-wip .panel-title { color: var(--muted); }
+    .panel-wip:hover { border-color: var(--border); transform: none; }
+    .panel-wip:hover .panel-arrow { color: var(--border); transform: none; }
+    .wip-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; background: #1a1a1a; color: var(--muted); border: 1px solid var(--border); width: fit-content; }
+    footer { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); animation: fadeUp 0.8s ease both; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">// главная</div>
+    <h1>Yaichki <span>Play</span></h1>
+    <div class="subtitle">q1yuqva · NaoMio404 · Taworb</div>
+  </header>
+  <div class="grid">
+    <a class="panel" href="index.html" style="animation-delay: 0.05s">
+      <div class="panel-arrow">↗</div>
+      <div class="panel-icon">🧩</div>
+      <div class="panel-title">Моды</div>
+      <div class="panel-desc">скачать моды<br>для minecraft</div>
+    </a>
+    <a class="panel panel-wip" style="animation-delay: 0.1s">
+      <div class="panel-arrow">↗</div>
+      <div class="panel-icon">📋</div>
+      <div class="panel-title">Правила</div>
+      <div class="panel-desc">правила сервера<br>и поведения</div>
+      <span class="wip-badge">скоро</span>
+    </a>
+    <a class="panel panel-wip" style="animation-delay: 0.15s">
+      <div class="panel-arrow">↗</div>
+      <div class="panel-icon">ℹ️</div>
+      <div class="panel-title">Инфо</div>
+      <div class="panel-desc">информация<br>о сервере</div>
+      <span class="wip-badge">скоро</span>
+    </a>
+    <a class="panel" href="https://donatex.gg/donate/yaichki_play" target="_blank" style="animation-delay: 0.2s">
+      <div class="panel-arrow">↗</div>
+      <div class="panel-icon">🎟️</div>
+      <div class="panel-title">Купить проходку</div>
+      <div class="panel-desc">доступ к<br>приватным серверам</div>
+    </a>
+  </div>
+  <footer>
+    <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
+  </footer>
+</body>
+</html>
