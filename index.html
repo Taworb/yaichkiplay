@@ -211,12 +211,9 @@
   </footer>
 
   <script>
-    const OWNER = 'taworb';
-    const REPO  = 'yaichkiplay';
-    const BRANCH = 'main'; // поменяй на master если нужно
-
-    // Файлы которые не показываем
-    const IGNORE = ['index.html', 'README.md', 'readme.md', '.gitkeep', '.gitignore'];
+    const OWNER  = 'taworb';
+    const REPO   = 'yaichkiplay';
+    const BRANCH = 'main';
 
     function getLoader(name) {
       const lower = name.toLowerCase();
@@ -242,23 +239,13 @@
       const status = document.getElementById('status');
 
       try {
-        const res = await fetch(
-          `https://api.github.com/repos/${OWNER}/${REPO}/git/trees/${BRANCH}?recursive=1`
-        );
-
-        if (!res.ok) throw new Error('API error ' + res.status);
-
-        const data = await res.json();
-
-        const files = (data.tree || []).filter(item =>
-          item.type === 'blob' &&
-          !IGNORE.includes(item.path.split('/').pop()) &&
-          !item.path.startsWith('.')
-        );
+        const res = await fetch('files.json');
+        if (!res.ok) throw new Error('files.json не найден');
+        const files = await res.json();
 
         status.remove();
 
-        if (files.length === 0) {
+        if (!files.length) {
           list.innerHTML = `
             <div class="state">
               <div class="empty-icon">📭</div>
@@ -267,17 +254,16 @@
           return;
         }
 
-        files.forEach((file, i) => {
-          const name     = file.path.split('/').pop();
+        files.forEach((name, i) => {
           const ext      = getExt(name);
           const baseName = stripExt(name);
           const loader   = getLoader(name);
-          const url      = `https://github.com/${OWNER}/${REPO}/raw/${BRANCH}/${file.path}`;
+          const url      = `https://github.com/${OWNER}/${REPO}/raw/${BRANCH}/${name}`;
 
           const card = document.createElement('a');
-          card.className  = 'file-card';
-          card.href       = url;
-          card.download   = name;
+          card.className = 'file-card';
+          card.href      = url;
+          card.download  = name;
           card.style.animationDelay = `${i * 0.07}s`;
 
           const badgeHTML = loader
@@ -307,7 +293,7 @@
       } catch (err) {
         status.innerHTML = `
           <div class="empty-icon">⚠️</div>
-          не удалось загрузить файлы<br>
+          не удалось загрузить список файлов<br>
           <span style="font-size:11px;margin-top:8px;display:block">${err.message}</span>
         `;
       }
