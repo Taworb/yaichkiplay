@@ -134,8 +134,7 @@
         const data  = await res.json();
         const files = (data.tree || []).filter(item =>
           item.type === 'blob' &&
-          !IGNORE.includes(item.path.split('/').pop()) &&
-          !item.path.startsWith('.')
+          item.path.startsWith('mods/')
         );
 
         status.remove();
