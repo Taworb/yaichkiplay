@@ -8,28 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --border: #222222;
-      --accent: #ff3232;
-      --text: #f0f0f0;
-      --muted: #555;
-      --hover-bg: #181818;
+      --bg: #0a0a0a; --surface: #111111; --border: #222222;
+      --accent: #ff3232; --text: #f0f0f0; --muted: #555; --hover-bg: #181818;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 60px 24px 80px;
-    }
-
+    body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; }
     header { width: 100%; max-width: 680px; margin-bottom: 56px; animation: fadeUp 0.6s ease both; }
     .logo { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
     h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
@@ -38,60 +21,37 @@
     .sub-link { color: var(--muted); text-decoration: none; transition: color 0.15s; }
     .sub-link:hover { color: var(--accent); }
 
+    .filters { width: 100%; max-width: 680px; display: flex; gap: 6px; margin-bottom: 16px; animation: fadeUp 0.45s ease both; flex-wrap: wrap; }
+    .filter-btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 14px; border-radius: 3px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all 0.15s; user-select: none; }
+    .filter-btn:hover { border-color: var(--muted); color: var(--text); }
+    .filter-btn.active-all  { border-color: var(--text); color: var(--text); }
+    .filter-btn.active-ban  { background: #2a0a0a; color: var(--accent); border-color: #4a1010; }
+    .filter-btn.active-mute { background: #1a1a2a; color: #7b9fff; border-color: #2a2a5a; }
+    .filter-btn.active-warn { background: #2a1a00; color: #ff9a3c; border-color: #4a3000; }
+
     .content { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 4px; }
 
-    .rule {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 20px 24px;
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      animation: fadeUp 0.5s ease both;
-    }
+    .rule { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; animation: fadeUp 0.5s ease both; }
+    .rule.hidden { display: none; }
 
-    .rule-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      flex-shrink: 0;
-      margin-top: 3px;
-      width: 24px;
-    }
+    .rule-num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.05em; flex-shrink: 0; margin-top: 2px; min-width: 32px; }
+    .rule-num.ban-num  { color: #ff5555; }
+    .rule-num.mute-num { color: #7b9fff; }
+    .rule-num.warn-num { color: #ff9a3c; }
 
     .rule-body { flex: 1; }
+    .rule-text { font-size: 14px; line-height: 1.6; color: #ddd; }
 
-    .rule-text {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #ddd;
-    }
-
-    .penalty {
-      display: inline-block;
-      font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 3px;
-      margin-top: 8px;
-    }
-
-    .penalty-ban { background: #2a0a0a; color: var(--accent); border: 1px solid #4a1010; }
+    .penalty { display: inline-block; font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; margin-top: 8px; }
+    .penalty-ban  { background: #2a0a0a; color: var(--accent); border: 1px solid #4a1010; }
     .penalty-mute { background: #1a1a2a; color: #7b9fff; border: 1px solid #2a2a5a; }
     .penalty-warn { background: #2a1a00; color: #ff9a3c; border: 1px solid #4a3000; }
 
     .back-btn { margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; transition: color 0.15s; animation: fadeUp 0.7s ease both; }
     .back-btn:hover { color: var(--accent); }
-
     footer { margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); animation: fadeUp 0.8s ease both; }
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--accent); }
-
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
@@ -107,74 +67,81 @@
     </div>
   </header>
 
+  <div class="filters">
+    <button class="filter-btn active-all" onclick="filter('all', this)">Все</button>
+    <button class="filter-btn" onclick="filter('ban', this)">Бан</button>
+    <button class="filter-btn" onclick="filter('mute', this)">Мут</button>
+    <button class="filter-btn" onclick="filter('warn', this)">Предупреждение</button>
+  </div>
+
   <div class="content">
 
-    <div class="rule" style="animation-delay: 0.05s">
-      <div class="rule-num">01</div>
+    <div class="rule" data-penalty="ban" style="animation-delay:0.05s">
+      <div class="rule-num ban-num">1.1</div>
       <div class="rule-body">
         <div class="rule-text">Запрещены любые лаг-машины, дюпы и схожие механики, нарушающие стабильность сервера.</div>
         <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
 
-    <div class="rule" style="animation-delay: 0.08s">
-      <div class="rule-num">02</div>
+    <div class="rule" data-penalty="ban" style="animation-delay:0.08s">
+      <div class="rule-num ban-num">1.2</div>
       <div class="rule-body">
         <div class="rule-text">Запрещено грифить, воровать чужие постройки и вещи.</div>
         <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
 
-    <div class="rule" style="animation-delay: 0.11s">
-      <div class="rule-num">03</div>
+    <div class="rule" data-penalty="ban" style="animation-delay:0.11s">
+      <div class="rule-num ban-num">1.3</div>
       <div class="rule-body">
         <div class="rule-text">Запрещено писать в игровой чат слова, запрещённые на платформе Twitch, если на сервере в данный момент ведётся трансляция.</div>
         <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
 
-    <div class="rule" style="animation-delay: 0.14s">
-      <div class="rule-num">04</div>
+    <div class="rule" data-penalty="ban" style="animation-delay:0.14s">
+      <div class="rule-num ban-num">1.4</div>
       <div class="rule-body">
         <div class="rule-text">Запрещены грубые оскорбления других игроков, а также оскорбления по национальному или расовому признаку.</div>
         <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
 
-    <div class="rule" style="animation-delay: 0.17s">
-      <div class="rule-num">05</div>
+    <div class="rule" data-penalty="ban" style="animation-delay:0.17s">
+      <div class="rule-num ban-num">1.5</div>
       <div class="rule-body">
-        <div class="rule-text">Запрещено использовать читы, хаки и модификации, дающие нечестное преимущество над другими игроками.</div>
+        <div class="rule-text">Запрещено использовать читы, хаки и модификации, дающие нечестное преимущество — включая xray и ресурспаки, позволяющие видеть сквозь лаву для поиска незерита.</div>
         <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
 
-    <div class="rule" style="animation-delay: 0.20s">
-      <div class="rule-num">06</div>
+    <div class="rule" data-penalty="ban" style="animation-delay:0.20s">
+      <div class="rule-num ban-num">1.6</div>
       <div class="rule-body">
-        <div class="rule-text">Запрещено намеренно мешать игре других игроков — блокировать, преследовать, намеренно убивать без причины.</div>
+        <div class="rule-text">Запрещено намеренно мешать игре других игроков — блокировать, преследовать, убивать без причины.</div>
         <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
 
-    <div class="rule" style="animation-delay: 0.23s">
-      <div class="rule-num">07</div>
-      <div class="rule-body">
-        <div class="rule-text">Запрещены спам и флуд в игровом чате.</div>
-        <span class="penalty penalty-mute">мут</span>
-      </div>
-    </div>
-
-    <div class="rule" style="animation-delay: 0.26s">
-      <div class="rule-num">08</div>
+    <div class="rule" data-penalty="ban" style="animation-delay:0.23s">
+      <div class="rule-num ban-num">1.7</div>
       <div class="rule-body">
         <div class="rule-text">Запрещено выдавать себя за администрацию сервера или вводить других игроков в заблуждение.</div>
         <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
 
-    <div class="rule" style="animation-delay: 0.29s">
-      <div class="rule-num">09</div>
+    <div class="rule" data-penalty="mute" style="animation-delay:0.26s">
+      <div class="rule-num mute-num">2.1</div>
+      <div class="rule-body">
+        <div class="rule-text">Запрещены спам и флуд в игровом чате.</div>
+        <span class="penalty penalty-mute">мут</span>
+      </div>
+    </div>
+
+    <div class="rule" data-penalty="warn" style="animation-delay:0.29s">
+      <div class="rule-num warn-num">3.1</div>
       <div class="rule-body">
         <div class="rule-text">Запрещено строить непристойные или оскорбительные постройки.</div>
         <span class="penalty penalty-warn">снос + предупреждение</span>
@@ -188,6 +155,20 @@
   <footer>
     <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
   </footer>
+
+  <script>
+    function filter(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.className = 'filter-btn');
+      btn.classList.add('active-' + type);
+      document.querySelectorAll('.rule').forEach(rule => {
+        if (type === 'all' || rule.dataset.penalty === type) {
+          rule.classList.remove('hidden');
+        } else {
+          rule.classList.add('hidden');
+        }
+      });
+    }
+  </script>
 
 </body>
 </html>
