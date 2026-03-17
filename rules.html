@@ -58,6 +58,7 @@
 <body>
 
   <header>
+    <a class="back-btn" href="./" style="margin-top:0; margin-bottom: 24px;">← назад</a>
     <div class="logo">// правила</div>
     <h1>Yaichki <span>Play</span></h1>
     <div class="subtitle">
@@ -132,7 +133,15 @@
       </div>
     </div>
 
-    <div class="rule" data-penalty="mute" style="animation-delay:0.26s">
+    <div class="rule" data-penalty="ban" style="animation-delay:0.26s">
+      <div class="rule-num ban-num">1.8</div>
+      <div class="rule-body">
+        <div class="rule-text">Запрещено загрязнять мир блоками, а также ломать или взрывать территории без причины.</div>
+        <span class="penalty penalty-ban">бан</span>
+      </div>
+    </div>
+
+    <div class="rule" data-penalty="mute" style="animation-delay:0.29s">
       <div class="rule-num mute-num">2.1</div>
       <div class="rule-body">
         <div class="rule-text">Запрещены спам и флуд в игровом чате.</div>
@@ -149,8 +158,6 @@
     </div>
 
   </div>
-
-  <a class="back-btn" href="./">← назад</a>
 
   <footer>
     <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
