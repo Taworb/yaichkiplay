@@ -18,28 +18,36 @@
       min-height: 100vh; display: flex; flex-direction: column;
       align-items: center; padding: 60px 24px 80px; overflow-x: hidden;
     }
-    header { width: 100%; max-width: 680px; margin-bottom: 64px; animation: fadeUp 0.6s ease both; }
+    header { width: 100%; max-width: 680px; margin-bottom: 64px; animation: fadeUp 0.6s ease both; position: relative; z-index: 10; }
     .logo { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
     h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
     h1 span { color: var(--accent); }
     .subtitle { margin-top: 12px; font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; }
     
-    .grid { width: 100%; max-width: 680px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid { width: 100%; max-width: 680px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: relative; z-index: 10; }
     
-    /* Стили панелей с бликом */
+    /* Стили панелей */
     .panel {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      background: var(--surface); 
+      border: 1px solid var(--border); /* Базовая граница */
+      border-radius: 4px;
       padding: 32px 28px; text-decoration: none; color: var(--text);
       display: flex; flex-direction: column; gap: 10px;
-      transition: background 0.15s, transform 0.15s;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s; /* Плавная смена границ */
       animation: fadeUp 0.5s ease both; cursor: pointer; position: relative;
     }
-    .panel:hover { background: var(--hover-bg); transform: translateY(-2px); }
     
-    /* Магия блика на рамке */
+    /* Эффект при полном наведении на панель: яркая красная обводка */
+    .panel:hover { 
+      background: var(--hover-bg); 
+      border-color: var(--accent); /* Вернули красную обводку */
+      transform: translateY(-2px); 
+    }
+    
+    /* Магия блика на рамке (следит за курсором) */
     .panel::before {
       content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
-      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 40%);
+      background: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.45), transparent 45%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor; mask-composite: exclude;
@@ -54,13 +62,14 @@
 
     /* Фолловер курсора (размытое пятно) */
     #cursor-glow {
-      position: fixed; top: 0; left: 0; width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(255, 50, 50, 0.06) 0%, transparent 70%);
+      position: fixed; top: 0; left: 0; width: 550px; height: 550px;
+      background: radial-gradient(circle, rgba(255, 50, 50, 0.1) 0%, rgba(255, 50, 50, 0.02) 40%, transparent 70%); /* Чуть выразительнее, но мягко */
       border-radius: 50%; pointer-events: none; z-index: -1;
-      filter: blur(60px); transform: translate(-50%, -50%); will-change: transform;
+      filter: blur(80px); /* Сильный блюр для мягкости */
+      transform: translate(-50%, -50%); will-change: transform;
     }
 
-    footer { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); animation: fadeUp 0.8s ease both; }
+    footer { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); animation: fadeUp 0.8s ease both; position: relative; z-index: 10; }
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--accent); } .sub-link { color: var(--muted); text-decoration: none; transition: color 0.15s; } .sub-link:hover { color: var(--accent); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -69,11 +78,13 @@
 </head>
 <body>
   <div id="cursor-glow"></div>
+  
   <header>
     <div class="logo">// главная</div>
     <h1>Yaichki <span>Play</span></h1>
     <div class="subtitle"><a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> · <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> · <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a></div>
   </header>
+  
   <div class="grid">
     <a class="panel" href="https://donatex.gg/donate/yaichki_play" target="_blank" style="animation-delay: 0.05s">
       <div class="panel-arrow">↗</div>
@@ -116,6 +127,7 @@
     const glow = document.getElementById('cursor-glow');
     let mX = 0, mY = 0, gX = 0, gY = 0;
 
+    // Скрипт следит за мышью и обновляет переменные CSS для бликов
     document.addEventListener('mousemove', (e) => {
       mX = e.clientX;
       mY = e.clientY;
@@ -127,8 +139,9 @@
       });
     });
 
+    // Функция анимации для плавного следования пятна
     function anim() {
-      gX += (mX - gX) * 0.08;
+      gX += (mX - gX) * 0.08; // Коэффициент плавности
       gY += (mY - gY) * 0.08;
       glow.style.transform = `translate(${gX}px, ${gY}px) translate(-50%, -50%)`;
       requestAnimationFrame(anim);
