@@ -11,7 +11,7 @@
     :root {
       --bg: #0a0a0a; --surface: #111111; --border: #222222;
       --accent: #ff3232; --text: #f0f0f0; --muted: #555; --hover-bg: #181818;
-      --mouse-x: 0px; --mouse-y: 0px;
+      --mouse-x: 50%; --mouse-y: 50%; /* Для бликов */
     }
     body {
       background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif;
@@ -23,98 +23,78 @@
     h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
     h1 span { color: var(--accent); }
     .subtitle { margin-top: 12px; font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; }
-    
     .grid { width: 100%; max-width: 680px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: relative; z-index: 10; }
     
-    /* Стили панелей */
     .panel {
-      background: var(--surface); 
-      border: 1px solid var(--border); /* Базовая граница */
-      border-radius: 4px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
       padding: 32px 28px; text-decoration: none; color: var(--text);
       display: flex; flex-direction: column; gap: 10px;
-      transition: background 0.15s, border-color 0.15s, transform 0.15s; /* Плавная смена границ */
-      animation: fadeUp 0.5s ease both; cursor: pointer; position: relative;
+      transition: all 0.2s ease; animation: fadeUp 0.5s ease both; cursor: pointer; position: relative;
     }
-    
-    /* Эффект при полном наведении на панель: яркая красная обводка */
-    .panel:hover { 
-      background: var(--hover-bg); 
-      border-color: var(--accent); /* Вернули красную обводку */
-      transform: translateY(-2px); 
-    }
-    
-    /* Магия блика на рамке (следит за курсором) */
+    .panel:hover { background: var(--hover-bg); border-color: var(--accent); transform: translateY(-2px); }
+
+    /* Блик на рамке */
     .panel::before {
       content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
-      background: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.45), transparent 45%);
+      background: radial-gradient(300px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 40%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude;
-      pointer-events: none; z-index: 2;
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
     }
 
-    .panel-icon { font-size: 28px; margin-bottom: 4px; position: relative; z-index: 3; }
-    .panel-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; position: relative; z-index: 3; }
-    .panel-desc { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; line-height: 1.5; position: relative; z-index: 3; }
-    .panel-arrow { position: absolute; top: 20px; right: 20px; color: var(--border); font-size: 18px; transition: color 0.15s, transform 0.15s; z-index: 3; }
+    .panel-icon { font-size: 28px; margin-bottom: 4px; }
+    .panel-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+    .panel-desc { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; line-height: 1.5; }
+    .panel-arrow { position: absolute; top: 20px; right: 20px; color: var(--border); font-size: 18px; transition: 0.2s; }
     .panel:hover .panel-arrow { color: var(--accent); transform: translate(2px, -2px); }
 
-    /* Фолловер курсора (размытое пятно) */
     #cursor-glow {
-      position: fixed; top: 0; left: 0; width: 550px; height: 550px;
-      background: radial-gradient(circle, rgba(255, 50, 50, 0.1) 0%, rgba(255, 50, 50, 0.02) 40%, transparent 70%); /* Чуть выразительнее, но мягко */
-      border-radius: 50%; pointer-events: none; z-index: -1;
-      filter: blur(80px); /* Сильный блюр для мягкости */
-      transform: translate(-50%, -50%); will-change: transform;
+      position: fixed; top: 0; left: 0; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none; z-index: 1; filter: blur(80px); transform: translate(-50%, -50%); will-change: transform;
     }
 
-    footer { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); animation: fadeUp 0.8s ease both; position: relative; z-index: 10; }
+    footer { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); position: relative; z-index: 10; }
     footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--accent); } .sub-link { color: var(--muted); text-decoration: none; transition: color 0.15s; } .sub-link:hover { color: var(--accent); }
+    footer a:hover { color: var(--accent); }
+    .sub-link { color: var(--muted); text-decoration: none; } .sub-link:hover { color: var(--accent); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <div id="cursor-glow"></div>
-  
   <header>
     <div class="logo">// главная</div>
     <h1>Yaichki <span>Play</span></h1>
-    <div class="subtitle"><a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> · <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> · <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a></div>
+    <div class="subtitle">
+      <a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> · 
+      <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> · 
+      <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a>
+    </div>
   </header>
-  
   <div class="grid">
     <a class="panel" href="https://donatex.gg/donate/yaichki_play" target="_blank" style="animation-delay: 0.05s">
       <div class="panel-arrow">↗</div>
-      <div class="panel-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-      </div>
+      <div class="panel-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
       <div class="panel-title">Купить проходку</div>
       <div class="panel-desc">доступ к<br>серверу</div>
     </a>
-    <a class="panel" href="rules" style="animation-delay: 0.1s">
+    <a class="panel" href="rules.html" style="animation-delay: 0.1s">
       <div class="panel-arrow">↗</div>
-      <div class="panel-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-      </div>
+      <div class="panel-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
       <div class="panel-title">Правила</div>
       <div class="panel-desc">правила сервера<br>и поведения</div>
     </a>
-    <a class="panel" href="info" style="animation-delay: 0.15s">
+    <a class="panel" href="info.html" style="animation-delay: 0.15s">
       <div class="panel-arrow">↗</div>
-      <div class="panel-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      </div>
+      <div class="panel-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
       <div class="panel-title">Инфо</div>
       <div class="panel-desc">информация<br>о сервере</div>
     </a>
-    <a class="panel" href="mods" style="animation-delay: 0.2s">
+    <a class="panel" href="mods.html" style="animation-delay: 0.2s">
       <div class="panel-arrow">↗</div>
-      <div class="panel-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-      </div>
+      <div class="panel-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
       <div class="panel-title">Моды</div>
       <div class="panel-desc">нужные<br>моды</div>
     </a>
@@ -126,23 +106,16 @@
   <script>
     const glow = document.getElementById('cursor-glow');
     let mX = 0, mY = 0, gX = 0, gY = 0;
-
-    // Скрипт следит за мышью и обновляет переменные CSS для бликов
     document.addEventListener('mousemove', (e) => {
-      mX = e.clientX;
-      mY = e.clientY;
-      const cards = document.querySelectorAll('.panel');
-      cards.forEach(card => {
+      mX = e.clientX; mY = e.clientY;
+      document.querySelectorAll('.panel').forEach(card => {
         const rect = card.getBoundingClientRect();
         card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
         card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
       });
     });
-
-    // Функция анимации для плавного следования пятна
     function anim() {
-      gX += (mX - gX) * 0.08; // Коэффициент плавности
-      gY += (mY - gY) * 0.08;
+      gX += (mX - gX) * 0.08; gY += (mY - gY) * 0.08;
       glow.style.transform = `translate(${gX}px, ${gY}px) translate(-50%, -50%)`;
       requestAnimationFrame(anim);
     }
