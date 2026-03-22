@@ -45,48 +45,47 @@
     .grid { width: 100%; max-width: 680px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; z-index: 2; }
 
     /* 2. ПАНЕЛИ И БЛИКИ */
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 32px 28px;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-      overflow: visible; /* Чтобы маска-блик была видна */
-      transition: background 0.15s, transform 0.15s, border-color 0.15s;
-      animation: fadeUp 0.5s ease both;
-    }
+  .panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 32px 28px;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: visible; 
+  transition: background 0.15s, transform 0.15s, border-color 0.15s;
+  animation: fadeUp 0.5s ease both;
+}
 
-    .panel:hover {
-      background: var(--hover-bg);
-      transform: translateY(-2px);
-      border-color: rgba(255, 50, 50, 0.3);
-    }
+.panel:hover {
+  background: var(--hover-bg);
+  transform: translateY(-2px);
+  border-color: var(--border); /* Оставляем стандартный бордер, блик сделает всё сам */
+}
 
-    /* Слой блика по краю */
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: -1px; /* Наслаиваем ровно на границу */
-      padding: 1px; /* Толщина блика */
-      border-radius: 4px;
-      background: radial-gradient(
-        300px circle at var(--mouse-x) var(--mouse-y),
-        rgba(255, 50, 50, 0.8), 
-        transparent 40%
-      );
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
-    }
+/* Блик, который виден всегда, когда курсор рядом */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: 4px;
+  background: radial-gradient(
+    300px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 50, 50, 0.6), 
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+}
 
     .panel:hover::before { opacity: 1; }
 
@@ -137,13 +136,15 @@
     </a>
 
     <a class="panel" href="info" style="animation-delay: 0.15s">
-      <div class="panel-arrow">↗</div>
-      <div class="panel-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      </div>
-      <div class="panel-title">Инфо</div>
-      <div class="panel-desc">информация<br>о сервере</div>
-    </a>
+  <div class="panel-arrow">↗</div>
+  <div class="panel-icon">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+  </div>
+  <div class="panel-title">Инфо</div>
+  <div class="panel-desc">информация<br>о сервере</div>
+</a>
 
     <a class="panel" href="mods" style="animation-delay: 0.2s">
       <div class="panel-arrow">↗</div>
@@ -159,38 +160,34 @@
     <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
   </footer>
 
-  <script>
-    const glow = document.querySelector('.cursor-glow');
-    const panels = document.querySelectorAll('.panel');
+<script>
+  const glow = document.querySelector('.cursor-glow');
+  const panels = document.querySelectorAll('.panel');
+  
+  let mouseX = -500;
+  let mouseY = -500;
+  let ballX = -500;
+  let ballY = -500;
+
+  function animate() {
+    ballX += (mouseX - ballX) * 0.1;
+    ballY += (mouseY - ballY) * 0.1;
+    glow.style.left = ballX + 'px';
+    glow.style.top = ballY + 'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
     
-    let mouseX = -500;
-    let mouseY = -500;
-    let ballX = -500;
-    let ballY = -500;
-    const speed = 0.08; // Скорость задержки пятна
-
-    // 1. Анимация мягкого следования пятна
-    function animate() {
-      ballX += (mouseX - ballX) * speed;
-      ballY += (mouseY - ballY) * speed;
-      
-      glow.style.transform = `translate(calc(${ballX}px - 50%), calc(${ballY}px - 50%))`;
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    // 2. Отслеживание координат
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      
-      panels.forEach(panel => {
-        const rect = panel.getBoundingClientRect();
-        // Передаем координаты ВНУТРЬ панели для CSS градиента блика
-        panel.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        panel.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      });
+    panels.forEach(panel => {
+      const rect = panel.getBoundingClientRect();
+      panel.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+      panel.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
     });
-  </script>
+  });
+</script>
 </body>
 </html>
