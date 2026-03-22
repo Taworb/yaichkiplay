@@ -100,13 +100,12 @@
     animate();
 
     document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX; mouseY = e.clientY;
-      document.querySelectorAll('.file-card').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        el.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        el.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      });
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      updateGlows();
     });
+
+    document.addEventListener('scroll', updateGlows);
 
     const OWNER = 'taworb', REPO = 'yaichkiplay', BRANCH = 'main';
     function getLoader(name) {
@@ -152,6 +151,13 @@
       } catch (err) { status.innerHTML = `Ошибка загрузки: ${err.message}`; }
     }
     loadFiles();
+function updateGlows() {
+  document.querySelectorAll('.info-block, .desc-block, .link-card, .file-card').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty('--mouse-x', `${mouseX - rect.left}px`);
+    el.style.setProperty('--mouse-y', `${mouseY - rect.top}px`);
+  });
+}
   </script>
 </body>
 </html>
