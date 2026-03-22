@@ -14,6 +14,7 @@
     }
     body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; overflow-x: hidden; }
     
+    /* Размытие за курсором */
     .cursor-glow {
       position: fixed; top: 0; left: 0; width: 450px; height: 450px;
       background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, rgba(255, 50, 50, 0) 70%);
@@ -41,6 +42,7 @@
     .rule { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; animation: fadeUp 0.5s ease both; position: relative; }
     .rule.hidden { display: none; }
     
+    /* Эффект блика на границе */
     .rule::after {
       content: ""; position: absolute; inset: -1px; padding: 1px; border-radius: 4px;
       background: radial-gradient(250px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 100%);
