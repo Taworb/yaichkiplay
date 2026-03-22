@@ -11,38 +11,44 @@
     :root {
       --bg: #0a0a0a; --surface: #111111; --border: #222222;
       --accent: #ff3232; --text: #f0f0f0; --muted: #555; --hover-bg: #181818;
+      --mouse-x: 50%; --mouse-y: 50%;
     }
     body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; overflow-x: hidden; }
     header { width: 100%; max-width: 680px; margin-bottom: 56px; animation: fadeUp 0.6s ease both; position: relative; z-index: 10; }
-    .logo { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
-    h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
-    .back-link { display: inline-block; margin-top: 16px; color: var(--muted); text-decoration: none; font-size: 13px; font-family: 'DM Mono', monospace; transition: 0.2s; }
-    .back-link:hover { color: var(--accent); }
+    .logo { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+    h1 span { color: var(--accent); }
+    .subtitle { margin-top: 12px; font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-    .filters { width: 100%; max-width: 680px; display: flex; gap: 8px; margin-bottom: 32px; animation: fadeUp 0.6s 0.1s ease both; position: relative; z-index: 10; }
-    .filter-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; transition: 0.2s; }
-    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .filters { width: 100%; max-width: 680px; display: flex; gap: 6px; margin-bottom: 16px; animation: fadeUp 0.45s ease both; flex-wrap: wrap; position: relative; z-index: 10; }
+    .filter-btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 14px; border-radius: 3px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all 0.15s; user-select: none; }
+    .filter-btn:hover { border-color: var(--muted); color: var(--text); }
+    .filter-btn.active-all  { border-color: var(--text); color: var(--text); }
+    .filter-btn.active-ban  { background: #2a0a0a; color: var(--accent); border-color: #4a1010; }
+    .filter-btn.active-mute { background: #1a1a2a; color: #7b9fff; border-color: #2a2a5a; }
+    .filter-btn.active-warn { background: #2a1a00; color: #ff9a3c; border-color: #4a3000; }
 
-    .rules-list { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 10; }
-    .rule { 
-      background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 4px; display: flex; gap: 20px; 
-      animation: fadeUp 0.5s ease both; position: relative; transition: all 0.2s;
-    }
-    .rule:hover { border-color: var(--accent); background: var(--hover-bg); }
+    .content { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 10; }
+    .rule { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; animation: fadeUp 0.5s ease both; position: relative; transition: border-color 0.15s; }
+    .rule:hover { border-color: var(--accent); }
+    .rule.hidden { display: none; }
+
     .rule::before {
       content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
-      background: radial-gradient(300px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 40%);
+      background: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 45%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+      mask-composite: exclude; pointer-events: none;
     }
 
-    .rule-num { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--muted); padding-top: 2px; }
-    .rule-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .rule-text { font-size: 15px; line-height: 1.5; }
-    .penalty { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; border-radius: 2px; width: fit-content; }
-    .penalty-ban { background: rgba(255, 50, 50, 0.1); color: var(--accent); }
-    .penalty-warn { background: rgba(255, 160, 0, 0.1); color: #ffa000; }
+    .rule-num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.05em; flex-shrink: 0; margin-top: 2px; min-width: 32px; }
+    .rule-num.ban-num  { color: #ff5555; }
+    .rule-num.mute-num { color: #7b9fff; }
+    .rule-num.warn-num { color: #ff9a3c; }
+    .rule-text { font-size: 14px; line-height: 1.6; color: #ddd; }
+    .penalty { display: inline-block; font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; margin-top: 8px; }
+    .penalty-ban  { background: #2a0a0a; color: var(--accent); border: 1px solid #4a1010; }
+    .penalty-mute { background: #1a1a2a; color: #7b9fff; border: 1px solid #2a2a5a; }
+    .penalty-warn { background: #2a1a00; color: #ff9a3c; border: 1px solid #4a3000; }
 
     #cursor-glow {
       position: fixed; top: 0; left: 0; width: 600px; height: 600px;
@@ -50,73 +56,57 @@
       border-radius: 50%; pointer-events: none; z-index: 1; filter: blur(80px); transform: translate(-50%, -50%); will-change: transform;
     }
 
-    footer { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); position: relative; z-index: 10; }
-    footer a { color: var(--muted); text-decoration: none; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .back-btn { margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; transition: color 0.15s; animation: fadeUp 0.7s ease both; position: relative; z-index: 10; }
+    .back-btn:hover { color: var(--accent); }
+    footer { margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); animation: fadeUp 0.8s ease both; position: relative; z-index: 10; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
   <div id="cursor-glow"></div>
   <header>
+    <a class="back-btn" href="./" style="margin-top:0; margin-bottom: 24px;">← назад</a>
     <div class="logo">// правила</div>
-    <h1>Кодекс сервера</h1>
-    <a href="index.html" class="back-link">← назад</a>
+    <h1>Yaichki <span>Play</span></h1>
+    <div class="subtitle"><a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> · <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> · <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a></div>
   </header>
 
   <div class="filters">
-    <button class="filter-btn active" onclick="filter('all', this)">Все</button>
+    <button class="filter-btn active-all" onclick="filter('all', this)">Все</button>
     <button class="filter-btn" onclick="filter('ban', this)">Бан</button>
-    <button class="filter-btn" onclick="filter('warn', this)">Варн</button>
+    <button class="filter-btn" onclick="filter('mute', this)">Мут</button>
+    <button class="filter-btn" onclick="filter('warn', this)">Предупреждение</button>
   </div>
 
-  <div class="rules-list">
-    <div class="rule" data-penalty="ban" style="animation-delay: 0.05s">
-      <div class="rule-num">1.1</div>
+  <div class="content">
+    <div class="rule" data-penalty="ban" style="animation-delay:0.05s">
+      <div class="rule-num ban-num">1.1</div>
       <div class="rule-body">
-        <div class="rule-text">Запрещено использование любых модификаций, дающих преимущество (читы).</div>
-        <span class="penalty penalty-ban">перманентный бан</span>
+        <div class="rule-text">Запрещены любые лаг-машины, дюпы и схожие механики.</div>
+        <span class="penalty penalty-ban">бан</span>
       </div>
     </div>
-    <div class="rule" data-penalty="warn" style="animation-delay: 0.1s">
-      <div class="rule-num">3.2</div>
-      <div class="rule-body">
-        <div class="rule-text">Запрещено загрязнять мир блоками и ломать территории без причины.</div>
-        <span class="penalty penalty-warn">предупреждение</span>
-      </div>
     </div>
-  </div>
-
-  <footer>
-    <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
-  </footer>
 
   <script>
-    // ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ ФИЛЬТРАЦИИ
     function filter(type, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.rule').forEach(r => {
-        r.style.display = (type === 'all' || r.dataset.penalty === type) ? 'flex' : 'none';
+      document.querySelectorAll('.filter-btn').forEach(b => b.className = 'filter-btn');
+      btn.classList.add('active-' + type);
+      document.querySelectorAll('.rule').forEach(rule => {
+        if (type === 'all' || rule.dataset.penalty === type) { rule.classList.remove('hidden'); } 
+        else { rule.classList.add('hidden'); }
       });
     }
 
-    // ЭФФЕКТЫ
-    const glow = document.getElementById('cursor-glow');
-    let mX = 0, mY = 0, gX = 0, gY = 0;
     document.addEventListener('mousemove', (e) => {
-      mX = e.clientX; mY = e.clientY;
+      const glow = document.getElementById('cursor-glow');
+      if (glow) glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
       document.querySelectorAll('.rule').forEach(card => {
         const rect = card.getBoundingClientRect();
         card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
         card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
       });
     });
-    function anim() {
-      gX += (mX - gX) * 0.08; gY += (mY - gY) * 0.08;
-      glow.style.transform = `translate(${gX}px, ${gY}px) translate(-50%, -50%)`;
-      requestAnimationFrame(anim);
-    }
-    anim();
   </script>
 </body>
 </html>
