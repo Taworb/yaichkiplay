@@ -7,6 +7,47 @@
   <link rel="icon" type="image/png" href="favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
+    /* Свечение за курсором */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 50, 50, 0.15) 0%, rgba(255, 50, 50, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none; /* Чтобы не мешал кликать */
+  z-index: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+
+/* Эффект блика на границах панелей */
+.panel {
+  position: relative;
+  overflow: hidden; /* Чтобы блик не выходил за края */
+  z-index: 1;
+}
+
+/* Подсветка границ при наведении курсора рядом */
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y), 
+    rgba(255, 50, 50, 0.1), 
+    transparent 40%
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.panel:hover::before {
+  opacity: 1;
+}
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0a0a0a; --surface: #111111; --border: #222222;
@@ -48,6 +89,7 @@
   </style>
 </head>
 <body>
+  <div class="cursor-glow"></div>
   <header>
     <div class="logo">// главная</div>
     <h1>Yaichki <span>Play</span></h1>
@@ -90,5 +132,45 @@
   <footer>
     <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
   </footer>
+  <script>
+  const glow = document.querySelector('.cursor-glow');
+  const panels = document.querySelectorAll('.panel');
+  
+  let mouseX = 0;
+  let mouseY = 0;
+  let ballX = 0;
+  let ballY = 0;
+  const speed = 0.1; // Задержка: чем меньше число, тем медленнее следует свет
+
+  // Плавное следование основного пятна
+  function animate() {
+    let distX = mouseX - ballX;
+    let distY = mouseY - ballY;
+    
+    ballX = ballX + (distX * speed);
+    ballY = ballY + (distY * speed);
+    
+    glow.style.left = ballX + 'px';
+    glow.style.top = ballY + 'px';
+    
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Отслеживание мыши и передача координат в CSS для панелей
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    panels.forEach(panel => {
+      const rect = panel.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      panel.style.setProperty('--mouse-x', `${x}px`);
+      panel.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+</script>
 </body>
 </html>
