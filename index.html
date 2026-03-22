@@ -18,20 +18,15 @@
       align-items: center; padding: 60px 24px 80px; overflow-x: hidden;
     }
 
-    /* 1. НОВОЕ ЧИСТОЕ РАЗМЫТИЕ */
+    /* Мягкое размытие за курсором */
     .cursor-glow {
       position: fixed;
       top: 0; left: 0;
-      width: 450px; /* Уменьшили физический размер */
-      height: 450px;
-      background: var(--accent);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, rgba(255, 50, 50, 0) 70%);
       border-radius: 50%;
       pointer-events: none;
       z-index: 0;
-      /* opacity регулирует общую яркость */
-      opacity: 0.12; 
-      /* filter: blur создает тот самый идеально мягкий край */
-      filter: blur(80px); 
       transform: translate(-50%, -50%);
       will-change: transform;
     }
@@ -53,9 +48,10 @@
       transition: background 0.15s, border-color 0.15s, transform 0.15s;
       animation: fadeUp 0.5s ease both; cursor: pointer; position: relative;
     }
+    /* Возвращаем обводку при наведении */
     .panel:hover { background: var(--hover-bg); border-color: var(--accent); transform: translateY(-2px); }
 
-    /* 2. БЛИКИ НА РАМКАХ (срабатывают только рядом) */
+    /* Блик по рамке при приближении курсора */
     .panel::after {
       content: "";
       position: absolute;
@@ -63,7 +59,7 @@
       padding: 1px;
       border-radius: 4px;
       background: radial-gradient(
-        250px circle at var(--mouse-x) var(--mouse-y),
+        150px circle at var(--mouse-x) var(--mouse-y),
         rgba(255, 50, 50, 0.4), 
         transparent 100%
       );
@@ -92,13 +88,73 @@
   <header>
     <div class="logo">// главная</div>
     <h1>Yaichki <span>Play</span></h1>
-    <div class="subtitle"><a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> · <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> · <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a></div>
+    <div class="subtitle">
+      <a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> · 
+      <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> · 
+      <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a>
+    </div>
   </header>
-
   <div class="grid">
     <a class="panel" href="https://donatex.gg/donate/yaichki_play" target="_blank" style="animation-delay: 0.05s">
       <div class="panel-arrow">↗</div>
       <div class="panel-icon">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
       </div>
-      <div class="
+      <div class="panel-title">Купить проходку</div>
+      <div class="panel-desc">доступ к<br>серверу</div>
+    </a>
+    <a class="panel" href="rules" style="animation-delay: 0.1s">
+      <div class="panel-arrow">↗</div>
+      <div class="panel-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="panel-title">Правила</div>
+      <div class="panel-desc">правила сервера<br>и поведения</div>
+    </a>
+    <a class="panel" href="info" style="animation-delay: 0.15s">
+      <div class="panel-arrow">↗</div>
+      <div class="panel-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="panel-title">Инфо</div>
+      <div class="panel-desc">информация<br>о сервере</div>
+    </a>
+    <a class="panel" href="mods" style="animation-delay: 0.2s">
+      <div class="panel-arrow">↗</div>
+      <div class="panel-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </div>
+      <div class="panel-title">Моды</div>
+      <div class="panel-desc">нужные<br>моды</div>
+    </a>
+  </div>
+  <footer>
+    <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
+  </footer>
+
+  <script>
+    const glow = document.querySelector('.cursor-glow');
+    const panels = document.querySelectorAll('.panel');
+    let mouseX = -500, mouseY = -500, ballX = -500, ballY = -500;
+
+    function animate() {
+      ballX += (mouseX - ballX) * 0.07; // Плавность шлейфа
+      ballY += (mouseY - ballY) * 0.07;
+      glow.style.left = ballX + 'px';
+      glow.style.top = ballY + 'px';
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      panels.forEach(panel => {
+        const rect = panel.getBoundingClientRect();
+        panel.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        panel.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    });
+  </script>
+</body>
+</html>
