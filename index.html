@@ -90,5 +90,59 @@
   <footer>
     <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
   </footer>
+<div id="cursor-glow"></div>
+
+<style>
+  /* Стили для пятна */
+  #cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 400px; /* Размер пятна */
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 50, 50, 0.15) 0%, rgba(255, 50, 50, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none; /* Чтобы пятно не мешало кликать по кнопкам */
+    z-index: 0; /* Пятно будет под текстом, но над фоном */
+    filter: blur(60px);
+    transform: translate(-50%, -50%); /* Центрируем относительно координат */
+    will-change: transform;
+  }
+
+  /* Чтобы карточки пропускали свет и подсвечивались границы */
+  .panel, .rule, .file-card, .info-block, .link-card, .notice, .desc-block {
+    position: relative;
+    z-index: 1; /* Карточки выше пятна */
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const glow = document.getElementById('cursor-glow');
+  let mouseX = 0;
+  let mouseY = 0;
+  let glowX = 0;
+  let glowY = 0;
+
+  // Коэффициент плавности (0.1 — очень плавно, 1.0 — мгновенно)
+  const speed = 0.08; 
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animate() {
+    // Вычисляем плавное перемещение (линейная интерполяция)
+    glowX += (mouseX - glowX) * speed;
+    glowY += (mouseY - glowY) * speed;
+
+    glow.style.transform = `translate(calc(${glowX}px - 50%), calc(${glowY}px - 50%))`;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
 </body>
 </html>
