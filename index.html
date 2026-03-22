@@ -23,26 +23,47 @@
   will-change: transform;
 }
 
-/* Эффект блика на границах панелей */
 .panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 32px 28px;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: background 0.15s, transform 0.15s;
+  animation: fadeUp 0.5s ease both;
+  cursor: pointer;
   position: relative;
-  overflow: hidden; /* Чтобы блик не выходил за края */
-  z-index: 1;
+  /* Важно для работы блика: */
+  overflow: visible; 
 }
 
-/* Подсветка границ при наведении курсора рядом */
+/* Слой для блика по границе */
 .panel::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: -1px; /* Выходим за границы на 1px, чтобы перекрыть border */
+  border-radius: 4px;
+  padding: 1px; /* Толщина "блика" */
   background: radial-gradient(
-    600px circle at var(--mouse-x) var(--mouse-y), 
-    rgba(255, 50, 50, 0.1), 
+    400px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 50, 50, 0.6), /* Цвет блика (красный) */
     transparent 40%
   );
-  z-index: -1;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.3s;
+  pointer-events: none;
 }
 
 .panel:hover::before {
