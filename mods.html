@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Yaichki Play — Моды</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    /* ... (базовые стили такие же, как в index) ... */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0a0a0a; --surface: #111111; --border: #222222;
       --accent: #ff3232; --text: #f0f0f0; --muted: #555; --hover-bg: #181818;
-      --mouse-x: 0px; --mouse-y: 0px;
     }
     body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; overflow-x: hidden; }
     header { width: 100%; max-width: 680px; margin-bottom: 48px; position: relative; z-index: 10; }
@@ -19,32 +19,28 @@
     .back-link { display: inline-block; margin-top: 16px; color: var(--muted); text-decoration: none; font-size: 13px; font-family: 'DM Mono', monospace; }
 
     .file-list { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 10; }
-    
     .file-card { 
       background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 16px 20px;
       display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit;
-      transition: 0.15s; position: relative;
+      transition: 0.2s; position: relative;
     }
     .file-card:hover { border-color: var(--accent); background: var(--hover-bg); }
-
     .file-card::before {
       content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
-      background: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.45), transparent 45%);
+      background: radial-gradient(300px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 40%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 2;
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
     }
-
-    .file-info { display: flex; align-items: center; gap: 16px; }
-    .file-icon { width: 40px; height: 40px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-    .file-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
-    .file-ext { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 
     #cursor-glow {
-      position: fixed; top: 0; left: 0; width: 550px; height: 550px;
-      background: radial-gradient(circle, rgba(255, 50, 50, 0.1) 0%, rgba(255, 50, 50, 0.02) 40%, transparent 70%);
-      border-radius: 50%; pointer-events: none; z-index: -1; filter: blur(80px); transform: translate(-50%, -50%); will-change: transform;
+      position: fixed; top: 0; left: 0; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none; z-index: 1; filter: blur(80px); transform: translate(-50%, -50%); will-change: transform;
     }
+    /* Твои стили иконок и бейджей модов здесь */
+    .file-info { display: flex; align-items: center; gap: 16px; }
+    .file-icon { width: 40px; height: 40px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -52,16 +48,39 @@
   <header>
     <div class="logo">// моды</div>
     <h1>Необходимые файлы</h1>
-    <a href="/" class="back-link">← назад</a>
+    <a href="index.html" class="back-link">← назад</a>
   </header>
 
   <div class="file-list" id="list">
-    </div>
+    <div id="status" style="font-family:'DM Mono'; font-size:12px; color:var(--muted)">Загрузка списка файлов...</div>
+  </div>
 
   <script>
+    // ВОЗВРАЩАЕМ ТВОЙ СКРИПТ ЗАГРУЗКИ (GITHUB API)
+    async function loadFiles() {
+        const list = document.getElementById('list');
+        try {
+            const res = await fetch('https://api.github.com/repos/taworb/yaichkiplay/contents/files');
+            const data = await res.json();
+            document.getElementById('status').remove();
+            data.forEach((file, i) => {
+                const card = document.createElement('a');
+                card.className = 'file-card';
+                card.href = file.download_url;
+                card.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">${file.name.split('.').pop()}</div>
+                        <div><div class="file-name">${file.name}</div></div>
+                    </div>`;
+                list.appendChild(card);
+            });
+        } catch(e) { document.getElementById('status').innerText = 'Ошибка загрузки'; }
+    }
+    loadFiles();
+
+    // ЭФФЕКТЫ
     const glow = document.getElementById('cursor-glow');
     let mX = 0, mY = 0, gX = 0, gY = 0;
-
     document.addEventListener('mousemove', (e) => {
       mX = e.clientX; mY = e.clientY;
       document.querySelectorAll('.file-card').forEach(card => {
@@ -70,14 +89,12 @@
         card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
       });
     });
-
     function anim() {
       gX += (mX - gX) * 0.08; gY += (mY - gY) * 0.08;
       glow.style.transform = `translate(${gX}px, ${gY}px) translate(-50%, -50%)`;
       requestAnimationFrame(anim);
     }
     anim();
-    // (Тут должен быть твой скрипт загрузки файлов из репозитория)
   </script>
 </body>
 </html>
