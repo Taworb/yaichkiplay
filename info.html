@@ -31,7 +31,6 @@
       overflow-x: hidden;
     }
 
-    /* Мягкое размытие за курсором */
     .cursor-glow {
       position: fixed;
       top: 0; left: 0;
@@ -55,7 +54,6 @@
 
     .content { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 2; }
 
-    /* Общие стили блоков с эффектом блика */
     .info-block, .desc-block, .link-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -209,38 +207,41 @@
     <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
   </footer>
 
-  <script>
-    const glow = document.querySelector('.cursor-glow');
-    let mouseX = -500, mouseY = -500, ballX = -500, ballY = -500;
+<script>
+  const glow = document.querySelector('.cursor-glow');
+  let mouseX = -500, mouseY = -500;
+  let ballX = -500, ballY = -500;
 
-    function animate() {
-      ballX += (mouseX - ballX) * 0.07;
-      ballY += (mouseY - ballY) * 0.07;
-      glow.style.left = ballX + 'px';
-      glow.style.top = ballY + 'px';
-      requestAnimationFrame(animate);
-    }
-    animate();
+  function animate() {
+    ballX += (mouseX - ballX) * 0.07;
+    ballY += (mouseY - ballY) * 0.07;
+    glow.style.left = ballX + 'px';
+    glow.style.top = ballY + 'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
 
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      updateGlows();
+  function updateGlows() {
+    document.querySelectorAll('.info-block, .desc-block, .link-card').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty('--mouse-x', `${mouseX - rect.left}px`);
+      el.style.setProperty('--mouse-y', `${mouseY - rect.top}px`);
     });
+  }
 
-    document.addEventListener('scroll', updateGlows);
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    updateGlows();
+  });
 
-      document.querySelectorAll('.info-block, .desc-block, .link-card').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        el.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        el.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      });
-    });
+  document.addEventListener('scroll', updateGlows);
 
-    function copyIP() {
-      const ip = "yaichki.playingfor.fun";
-      const hint = document.getElementById('copy-hint');
-      
+  function copyIP() {
+    const ip = "yaichki.playingfor.fun";
+    const hint = document.getElementById('copy-hint');
+    
+    if (navigator.clipboard) {
       navigator.clipboard.writeText(ip).then(() => {
         hint.textContent = "скопировано!";
         hint.style.color = "var(--accent)";
@@ -250,13 +251,7 @@
         }, 2000);
       });
     }
-function updateGlows() {
-  document.querySelectorAll('.info-block, .desc-block, .link-card, .file-card').forEach(el => {
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty('--mouse-x', `${mouseX - rect.left}px`);
-    el.style.setProperty('--mouse-y', `${mouseY - rect.top}px`);
-  });
-}
-  </script>
+  }
+</script>
 </body>
 </html>
