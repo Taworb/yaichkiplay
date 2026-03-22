@@ -11,48 +11,43 @@
     :root {
       --bg: #0a0a0a; --surface: #111111; --border: #222222;
       --accent: #ff3232; --text: #f0f0f0; --muted: #555; --hover-bg: #181818;
-      --mouse-x: 0px; --mouse-y: 0px;
     }
     body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; overflow-x: hidden; }
     header { width: 100%; max-width: 680px; margin-bottom: 56px; animation: fadeUp 0.6s ease both; position: relative; z-index: 10; }
     .logo { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
     h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
-    .back-link { display: inline-block; margin-top: 16px; color: var(--muted); text-decoration: none; font-size: 13px; font-family: 'DM Mono', monospace; transition: color 0.15s; }
+    .back-link { display: inline-block; margin-top: 16px; color: var(--muted); text-decoration: none; font-size: 13px; font-family: 'DM Mono', monospace; transition: 0.2s; }
     .back-link:hover { color: var(--accent); }
 
     .filters { width: 100%; max-width: 680px; display: flex; gap: 8px; margin-bottom: 32px; animation: fadeUp 0.6s 0.1s ease both; position: relative; z-index: 10; }
     .filter-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; transition: 0.2s; }
-    .filter-btn:hover { border-color: var(--muted); color: var(--text); }
     .filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 
     .rules-list { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 10; }
-    
     .rule { 
       background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 4px; display: flex; gap: 20px; 
-      animation: fadeUp 0.5s ease both; position: relative; transition: border-color 0.15s, background 0.15s;
+      animation: fadeUp 0.5s ease both; position: relative; transition: all 0.2s;
     }
     .rule:hover { border-color: var(--accent); background: var(--hover-bg); }
-
-    /* Блик на рамке */
     .rule::before {
       content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
-      background: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.45), transparent 45%);
+      background: radial-gradient(300px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 40%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 2;
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
     }
 
     .rule-num { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--muted); padding-top: 2px; }
     .rule-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .rule-text { font-size: 15px; line-height: 1.5; color: var(--text); }
+    .rule-text { font-size: 15px; line-height: 1.5; }
     .penalty { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; border-radius: 2px; width: fit-content; }
     .penalty-ban { background: rgba(255, 50, 50, 0.1); color: var(--accent); }
     .penalty-warn { background: rgba(255, 160, 0, 0.1); color: #ffa000; }
 
     #cursor-glow {
-      position: fixed; top: 0; left: 0; width: 550px; height: 550px;
-      background: radial-gradient(circle, rgba(255, 50, 50, 0.1) 0%, rgba(255, 50, 50, 0.02) 40%, transparent 70%);
-      border-radius: 50%; pointer-events: none; z-index: -1; filter: blur(80px); transform: translate(-50%, -50%); will-change: transform;
+      position: fixed; top: 0; left: 0; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none; z-index: 1; filter: blur(80px); transform: translate(-50%, -50%); will-change: transform;
     }
 
     footer { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); position: relative; z-index: 10; }
@@ -65,7 +60,7 @@
   <header>
     <div class="logo">// правила</div>
     <h1>Кодекс сервера</h1>
-    <a href="/" class="back-link">← назад</a>
+    <a href="index.html" class="back-link">← назад</a>
   </header>
 
   <div class="filters">
@@ -78,20 +73,36 @@
     <div class="rule" data-penalty="ban" style="animation-delay: 0.05s">
       <div class="rule-num">1.1</div>
       <div class="rule-body">
-        <div class="rule-text">Запрещено использование любых модификаций, дающих преимущество (читы, X-Ray и т.д.).</div>
+        <div class="rule-text">Запрещено использование любых модификаций, дающих преимущество (читы).</div>
         <span class="penalty penalty-ban">перманентный бан</span>
       </div>
     </div>
+    <div class="rule" data-penalty="warn" style="animation-delay: 0.1s">
+      <div class="rule-num">3.2</div>
+      <div class="rule-body">
+        <div class="rule-text">Запрещено загрязнять мир блоками и ломать территории без причины.</div>
+        <span class="penalty penalty-warn">предупреждение</span>
+      </div>
     </div>
+  </div>
 
   <footer>
     <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
   </footer>
 
   <script>
+    // ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ ФИЛЬТРАЦИИ
+    function filter(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.rule').forEach(r => {
+        r.style.display = (type === 'all' || r.dataset.penalty === type) ? 'flex' : 'none';
+      });
+    }
+
+    // ЭФФЕКТЫ
     const glow = document.getElementById('cursor-glow');
     let mX = 0, mY = 0, gX = 0, gY = 0;
-
     document.addEventListener('mousemove', (e) => {
       mX = e.clientX; mY = e.clientY;
       document.querySelectorAll('.rule').forEach(card => {
@@ -100,21 +111,12 @@
         card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
       });
     });
-
     function anim() {
       gX += (mX - gX) * 0.08; gY += (mY - gY) * 0.08;
       glow.style.transform = `translate(${gX}px, ${gY}px) translate(-50%, -50%)`;
       requestAnimationFrame(anim);
     }
     anim();
-
-    function filter(type, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.rule').forEach(r => {
-        r.style.display = (type === 'all' || r.dataset.penalty === type) ? 'flex' : 'none';
-      });
-    }
   </script>
 </body>
 </html>
