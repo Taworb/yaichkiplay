@@ -14,7 +14,6 @@
     }
     body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; overflow-x: hidden; }
     
-    /* Размытие за курсором */
     .cursor-glow {
       position: fixed; top: 0; left: 0; width: 450px; height: 450px;
       background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, rgba(255, 50, 50, 0) 70%);
@@ -42,7 +41,6 @@
     .rule { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; animation: fadeUp 0.5s ease both; position: relative; }
     .rule.hidden { display: none; }
     
-    /* Эффект блика на границе */
     .rule::after {
       content: ""; position: absolute; inset: -1px; padding: 1px; border-radius: 4px;
       background: radial-gradient(250px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 100%);
@@ -182,6 +180,15 @@
     const glow = document.querySelector('.cursor-glow');
     let mouseX = -500, mouseY = -500, ballX = -500, ballY = -500;
 
+    // Функция обновления бликов на блоках
+    function updateGlows() {
+      document.querySelectorAll('.rule').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        el.style.setProperty('--mouse-x', `${mouseX - rect.left}px`);
+        el.style.setProperty('--mouse-y', `${mouseY - rect.top}px`);
+      });
+    }
+
     function animate() {
       ballX += (mouseX - ballX) * 0.07;
       ballY += (mouseY - ballY) * 0.07;
@@ -192,12 +199,14 @@
     animate();
 
     document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX; mouseY = e.clientY;
-      document.querySelectorAll('.rule').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        el.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        el.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      });
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      updateGlows();
+    });
+
+    // Исправление бага: обновляем координаты при скролле
+    document.addEventListener('scroll', () => {
+      updateGlows();
     });
 
     function filter(type, btn) {
@@ -210,6 +219,8 @@
           rule.classList.add('hidden');
         }
       });
+      // После фильтрации тоже стоит обновить координаты, так как блоки могут сместиться
+      updateGlows();
     }
   </script>
 </body>
