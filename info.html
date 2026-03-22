@@ -8,109 +8,238 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0a0a0a; --surface: #111111; --border: #222222;
-      --accent: #ff3232; --text: #f0f0f0; --muted: #555; --hover-bg: #181818;
-    }
-    body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; overflow-x: hidden; }
 
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #222222;
+      --accent: #ff3232;
+      --text: #f0f0f0;
+      --muted: #555;
+      --hover-bg: #181818;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 24px 80px;
+      overflow-x: hidden;
+    }
+
+    /* Мягкое размытие за курсором */
     .cursor-glow {
-      position: fixed; top: 0; left: 0; width: 450px; height: 450px;
+      position: fixed;
+      top: 0; left: 0;
+      width: 450px; height: 450px;
       background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, rgba(255, 50, 50, 0) 70%);
-      border-radius: 50%; pointer-events: none; z-index: 0; transform: translate(-50%, -50%); will-change: transform;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      will-change: transform;
     }
 
     header { width: 100%; max-width: 680px; margin-bottom: 56px; animation: fadeUp 0.6s ease both; position: relative; z-index: 2; }
     .logo { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
     h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
     h1 span { color: var(--accent); }
+
     .subtitle { margin-top: 12px; font-size: 14px; color: var(--muted); font-family: 'DM Mono', monospace; }
-    .sub-link { color: var(--muted); text-decoration: none; transition: color 0.15s; } .sub-link:hover { color: var(--accent); }
+    .sub-link { color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    .sub-link:hover { color: var(--accent); }
 
     .content { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 2; }
 
+    /* Общие стили блоков с эффектом блика */
     .info-block, .desc-block, .link-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 28px; animation: fadeUp 0.5s ease both; position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      position: relative;
     }
-    
+
     .info-block::after, .desc-block::after, .link-card::after {
-      content: ""; position: absolute; inset: -1px; padding: 1px; border-radius: 4px;
+      content: "";
+      position: absolute;
+      inset: -1px;
+      padding: 1px;
+      border-radius: 4px;
       background: radial-gradient(250px circle at var(--mouse-x) var(--mouse-y), rgba(255, 50, 50, 0.4), transparent 100%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
+    .info-block { padding: 28px; animation: fadeUp 0.5s ease both; }
     .info-block-title { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
+    
     .info-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .info-row:last-child { border-bottom: none; padding-bottom: 0; }
     .info-label { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
     .info-value { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
     .info-value.ip { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--accent); cursor: pointer; transition: opacity 0.15s; }
+    .info-value.ip:hover { opacity: 0.7; }
+    
     .copy-hint { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); margin-top: 4px; text-align: right; }
-    .desc-block { font-size: 14px; line-height: 1.7; color: #ccc; }
 
-    .links { display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 2; }
-    .link-card { padding: 18px 24px; text-decoration: none; color: var(--text); display: flex; align-items: center; justify-content: space-between; transition: background 0.15s, transform 0.15s; }
+    .desc-block { padding: 28px; font-size: 14px; line-height: 1.7; color: #ccc; animation: fadeUp 0.55s ease both; animation-delay: 0.1s; }
+
+    .section-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px; margin-bottom: 4px; }
+
+    .links { display: flex; flex-direction: column; gap: 4px; }
+    .link-card {
+      padding: 18px 24px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      animation: fadeUp 0.5s ease both;
+    }
     .link-card:hover { background: var(--hover-bg); border-color: var(--accent); transform: translateX(4px); }
+
     .link-left { display: flex; align-items: center; gap: 14px; }
-    .link-name { font-size: 14px; font-weight: 700; }
+    .link-icon { width: 40px; height: 40px; border-radius: 3px; background: #1a1a1a; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .link-name { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
     .link-url { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
-    .section-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px; margin-bottom: 4px; position: relative; z-index: 2; }
+    .link-arrow { color: var(--muted); transition: color 0.15s; }
+    .link-card:hover .link-arrow { color: var(--accent); }
 
     .back-btn { margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; transition: color 0.15s; animation: fadeUp 0.7s ease both; position: relative; z-index: 2; }
     .back-btn:hover { color: var(--accent); }
+
     footer { margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); animation: fadeUp 0.8s ease both; position: relative; z-index: 2; }
-    footer a { color: var(--muted); text-decoration: none; } footer a:hover { color: var(--accent); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
   <div class="cursor-glow"></div>
+
   <header>
     <a class="back-btn" href="./" style="margin-top:0; margin-bottom: 24px;">← назад</a>
     <div class="logo">// инфо</div>
     <h1>Yaichki <span>Play</span></h1>
-    <div class="subtitle"><a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> · <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> · <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a></div>
+    <div class="subtitle">
+      <a href="https://t.me/q1yuqva" target="_blank" class="sub-link">q1yuqva</a> ·
+      <a href="https://t.me/NaoMio404" target="_blank" class="sub-link">NaoMio404</a> ·
+      <a href="https://t.me/taworc" target="_blank" class="sub-link">Taworb</a>
+    </div>
   </header>
 
   <div class="content">
-    <div class="info-block" style="animation-delay: 0.05s">
+    <div class="info-block">
       <div class="info-block-title">Сервер</div>
-      <div class="info-row"><span class="info-label">Версия</span><span class="info-value">1.21.11</span></div>
-      <div class="info-row"><span class="info-label">IP адрес</span><div style="text-align:right"><div class="info-value ip" onclick="copyIP(this)">yaichki.playingfor.fun</div><div class="copy-hint" id="copy-hint">нажми чтобы скопировать</div></div></div>
+      <div class="info-row">
+        <span class="info-label">Версия</span>
+        <span class="info-value">1.21.1</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">IP адрес</span>
+        <div style="text-align:right">
+          <div class="info-value ip" id="ip-address" onclick="copyIP()">yaichki.playingfor.fun</div>
+          <div class="copy-hint" id="copy-hint">нажми чтобы скопировать</div>
+        </div>
+      </div>
     </div>
-    <div class="desc-block" style="animation-delay: 0.15s">Yaichki Play — приватный Minecraft сервер...</div>
+
+    <div class="desc-block">
+      Yaichki Play — приватный Minecraft сервер с упором на ванильное выживание, ламповое сообщество и отсутствие лишних плагинов. Мы создаем пространство, где каждый игрок может реализовать свои идеи без страха гриферства.
+    </div>
+
     <div class="section-label">Сообщество</div>
     <div class="links">
-      <a class="link-card" href="https://t.me/yaichkiplay" target="_blank"><div class="link-left"><div class="link-name">Telegram канал</div><div class="link-url">t.me/yaichkiplay</div></div><div>↗</div></a>
-      <a class="link-card" href="https://discord.gg/TsKPV5VVD8" target="_blank"><div class="link-left"><div class="link-name">Discord сервер</div><div class="link-url">discord.gg/TsKPV5VVD8</div></div><div>↗</div></a>
+      <a class="link-card" href="https://t.me/yaichkiplay" target="_blank" style="animation-delay: 0.2s">
+        <div class="link-left">
+          <div class="link-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+          </div>
+          <div>
+            <div class="link-name">Telegram канал</div>
+            <div class="link-url">t.me/yaichkiplay</div>
+          </div>
+        </div>
+        <div class="link-arrow">↗</div>
+      </a>
+
+      <a class="link-card" href="https://discord.gg/TsKPV5VVD8" target="_blank" style="animation-delay: 0.25s">
+        <div class="link-left">
+          <div class="link-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 14s1.5 2 4 2 4-2 4-2\"/><line x1=\"9\" y1=\"9\" x2=\"9.01\" y2=\"9\"/><line x1=\"15\" y1=\"9\" x2=\"15.01\" y2=\"9\"/></svg>
+          </div>
+          <div>
+            <div class="link-name">Discord сервер</div>
+            <div class="link-url">discord.gg/TsKPV5VVD8</div>
+          </div>
+        </div>
+        <div class="link-arrow">↗</div>
+      </a>
+
+      <a class="link-card" href="https://t.me/yaichkiplay_bot" target="_blank" style="animation-delay: 0.3s">
+        <div class="link-left">
+          <div class="link-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="link-name">Поддержка</div>
+            <div class="link-url">t.me/yaichkiplay_bot</div>
+          </div>
+        </div>
+        <div class="link-arrow">↗</div>
+      </a>
     </div>
   </div>
 
-  <footer><a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a></footer>
+  <footer>
+    <a href="https://github.com/taworb/yaichkiplay" target="_blank">github.com/taworb/yaichkiplay</a>
+  </footer>
 
   <script>
     const glow = document.querySelector('.cursor-glow');
     let mouseX = -500, mouseY = -500, ballX = -500, ballY = -500;
+
     function animate() {
-      ballX += (mouseX - ballX) * 0.07; ballY += (mouseY - ballY) * 0.07;
-      glow.style.left = ballX + 'px'; glow.style.top = ballY + 'px';
+      ballX += (mouseX - ballX) * 0.07;
+      ballY += (mouseY - ballY) * 0.07;
+      glow.style.left = ballX + 'px';
+      glow.style.top = ballY + 'px';
       requestAnimationFrame(animate);
     }
     animate();
+
     document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX; mouseY = e.clientY;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      // Обновляем блики для всех блоков
       document.querySelectorAll('.info-block, .desc-block, .link-card').forEach(el => {
         const rect = el.getBoundingClientRect();
         el.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
         el.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
       });
     });
-    function copyIP(el) {
-      navigator.clipboard.writeText('yaichki.playingfor.fun').then(() => {
-        const hint = document.getElementById('copy-hint'); hint.textContent = 'скопировано!';
-        setTimeout(() => { hint.textContent = 'нажми чтобы скопировать'; }, 2000);
+
+    function copyIP() {
+      const ip = "yaichki.playingfor.fun";
+      const hint = document.getElementById('copy-hint');
+      
+      navigator.clipboard.writeText(ip).then(() => {
+        hint.textContent = "скопировано!";
+        hint.style.color = "var(--accent)";
+        setTimeout(() => {
+          hint.textContent = "нажми чтобы скопировать";
+          hint.style.color = "var(--muted)";
+        }, 2000);
       });
     }
   </script>
