@@ -91,8 +91,8 @@
     let mouseX = -500, mouseY = -500, ballX = -500, ballY = -500;
 
     function animate() {
-      ballX += (mouseX - ballX) * 0.07;
-      ballY += (mouseY - ballY) * 0.07;
+      ballX += (mouseX - ballX) * 0.1;
+      ballY += (mouseY - ballY) * 0.1;
       glow.style.left = ballX + 'px';
       glow.style.top = ballY + 'px';
       requestAnimationFrame(animate);
