@@ -124,6 +124,10 @@
         status.remove();
         files.forEach((file, i) => {
           const name = file.path.split('/').pop(), ext = name.split('.').pop(), loader = getLoader(name);
+
+          const lastDotIndex = name.lastIndexOf('.');
+          const displayName = lastDotIndex !== -1 ? name.slice(0, lastDotIndex) : name;
+
           const card = document.createElement('a');
           card.className = 'file-card'; 
           card.href = `https://github.com/${OWNER}/${REPO}/raw/${BRANCH}/${file.path}`;
@@ -136,7 +140,7 @@
             <div class="file-info">
               <div class="file-icon">${ext}</div>
               <div>
-                <div class="file-name">${name.split('.')[0]}</div>
+                <div class="file-name">${displayName}</div>
                 <div class="file-ext">${name}</div>
                 ${badgeHTML}
               </div>
