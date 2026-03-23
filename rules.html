@@ -180,7 +180,6 @@
     const glow = document.querySelector('.cursor-glow');
     let mouseX = -500, mouseY = -500, ballX = -500, ballY = -500;
 
-    // Функция обновления бликов на блоках
     function updateGlows() {
       document.querySelectorAll('.rule').forEach(el => {
         const rect = el.getBoundingClientRect();
@@ -204,7 +203,6 @@
       updateGlows();
     });
 
-    // Исправление бага: обновляем координаты при скролле
     document.addEventListener('scroll', () => {
       updateGlows();
     });
@@ -219,7 +217,6 @@
           rule.classList.add('hidden');
         }
       });
-      // После фильтрации тоже стоит обновить координаты, так как блоки могут сместиться
       updateGlows();
     }
   </script>
