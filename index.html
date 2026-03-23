@@ -18,7 +18,6 @@
       align-items: center; padding: 60px 24px 80px; overflow-x: hidden;
     }
 
-    /* Мягкое размытие за курсором */
     .cursor-glow {
       position: fixed;
       top: 0; left: 0;
@@ -48,10 +47,8 @@
       transition: background 0.15s, border-color 0.15s, transform 0.15s;
       animation: fadeUp 0.5s ease both; cursor: pointer; position: relative;
     }
-    /* Возвращаем обводку при наведении */
     .panel:hover { background: var(--hover-bg); border-color: var(--accent); transform: translateY(-2px); }
 
-    /* Блик по рамке при приближении курсора */
     .panel::after {
       content: "";
       position: absolute;
