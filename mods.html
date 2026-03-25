@@ -15,9 +15,17 @@
     body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 60px 24px 80px; overflow-x: hidden; }
 
     .cursor-glow {
-      position: fixed; top: 0; left: 0; width: 450px; height: 450px;
+      position: fixed;
+      top: 0; left: 0;
+      width: 450px; height: 450px;
       background: radial-gradient(circle, rgba(255, 50, 50, 0.08) 0%, rgba(255, 50, 50, 0) 70%);
-      border-radius: 50%; pointer-events: none; z-index: 0; transform: translate(-50%, -50%); will-change: transform;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      will-change: transform;
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
     header { width: 100%; max-width: 680px; margin-bottom: 56px; animation: fadeUp 0.6s ease both; position: relative; z-index: 2; }
@@ -88,7 +96,7 @@
 
   <script>
     const glow = document.querySelector('.cursor-glow');
-    let mouseX = -500, mouseY = -500, ballX = -500, ballY = -500;
+    let mouseX = -9999, mouseY = -9999, ballX = -9999, ballY = -9999, moved = false;
 
     function animate() {
       ballX += (mouseX - ballX) * 0.1;
@@ -100,6 +108,7 @@
     animate();
 
     document.addEventListener('mousemove', (e) => {
+      if (!moved) { moved = true; glow.style.opacity = 1; }
       mouseX = e.clientX;
       mouseY = e.clientY;
       updateGlows();
